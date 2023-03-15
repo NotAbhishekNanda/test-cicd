@@ -15,7 +15,7 @@ jobs:
         id: read-file
         uses: juliangruber/read-file-action@v1
         with:
-          path: ./file.txt;
+          path: ./file.txt
       
       - name: Add PR comment
         uses: mshick/add-pr-comment@v2
