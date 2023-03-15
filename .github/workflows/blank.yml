@@ -13,10 +13,9 @@ jobs:
       
       - name: Read file
         id: read-file
-        run: |
-          const fs = require('fs');
-          const fileContents = fs.readFileSync('./file.txt', 'utf8');
-          console.log(fileContents);
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./file.txt;
       
       - name: Add PR comment
         uses: mshick/add-pr-comment@v2
