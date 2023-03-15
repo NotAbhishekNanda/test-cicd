@@ -7,11 +7,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
-      - uses: mshick/add-pr-comment@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Read file
+        id: read-file
+        run: |
+          const fs = require('fs');
+          const fileContents = fs.readFileSync('./file.txt', 'utf8');
+          console.log(fileContents);
+          console.log(`::set-output name=fileContents::${fileContents}`)
+      
+      - name: Add PR comment
+        uses: mshick/add-pr-comment@v2
         with:
           message: |
-            **Hello MAIN**
+            **File Contents:** ${{ steps.read-file.outputs.fileContents }}
+
           
