@@ -24,5 +24,10 @@ jobs:
         with:
           message: |
             **File Contents:** ${{ steps.read-file.outputs.fileContents }}
+          message-id: add-pr-comment
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-repeats: false
+          status: success
+          issue-number: ${{ github.event.pull_request.number }}
 
           
