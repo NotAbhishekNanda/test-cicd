@@ -7,27 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Read file
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const fs = require('fs');
-            const fileContents = fs.readFileSync('file.txt', 'utf8');
-            console.log(fileContents);
-            core.setOutput('fileContents', fileContents);
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add PR comment
-        uses: mshick/add-pr-comment@v2
+      - uses: mshick/add-pr-comment@v2
         with:
           message: |
             **Hello MAIN**
-            File contents: ${{ steps.readfile.outputs.fileContents }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           
