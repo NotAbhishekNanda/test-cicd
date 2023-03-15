@@ -17,7 +17,6 @@ jobs:
           const fs = require('fs');
           const fileContents = fs.readFileSync('./file.txt', 'utf8');
           console.log(fileContents);
-          console.log(`::set-output name=fileContents::${fileContents}`)
       
       - name: Add PR comment
         uses: mshick/add-pr-comment@v2
