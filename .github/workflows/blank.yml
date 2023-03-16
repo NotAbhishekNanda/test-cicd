@@ -23,16 +23,11 @@ jobs:
         run: echo "${{ steps.read_file.outputs.contents }}"
         
       - name: Post comment
-        uses: actions/github-script@v5
+        uses: mshick/add-pr-comment@v2
         with:
-          github-token: ${{ secrets.TEST_GITHUB_TOKEN }}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `File contents:\n\n${{ steps.read_file.outputs.contents }}`
-            });
+          message: |
+            **Hello MAIN**
+
        
 #      - name: Add PR comment
 #        uses: mshick/add-pr-comment@v2
