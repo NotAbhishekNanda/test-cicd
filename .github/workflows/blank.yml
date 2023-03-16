@@ -10,6 +10,11 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **Hello MAIN**
+      
       - name: Checkout code
         uses: actions/checkout@v3
       
@@ -22,11 +27,11 @@ jobs:
       - name: Echo file txt
         run: echo "${{ steps.read_file.outputs.contents }}"
         
-      - name: Post comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            **Hello MAIN**
+#      - name: Post comment
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message: |
+#            **Hello MAIN**
 
        
 #      - name: Add PR comment
