@@ -19,16 +19,18 @@ jobs:
         uses: andstor/file-reader-action@v1
         with:
           path: "file.txt"
+        env:
+          file_contents: ${{ steps.read_file.outputs.contents }}
           
       - name: Echo file txt
-        run: echo "${{ steps.read_file.outputs.contents }}"
+        run: echo "${{ env.file_contents }}"
         
       - name: Post comment
         uses: actions/github-script@v3.1.0
         with:
           github-token: ${{ secrets.TEST_GITHUB_TOKEN }}
           script: |
-            const commentBody = `File contents:\n\n${{ steps.read_file.outputs.contents }}`;
+            const commentBody = `File contents:\n\n${{ env.file_contents }}`;
             const { data: { id: commentId } } = await github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -36,6 +38,9 @@ jobs:
               body: commentBody,
             });
             console.log(`Created comment ${commentId}`);
+        env:
+          comment_id: ${{ steps.post_comment.outputs.comment_id }}
+
 
         
 #      - name: Post comment
