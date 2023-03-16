@@ -3,20 +3,16 @@ name: CI
 on:
   pull_request:
     types: [labeled]
-  
+
+permissions:
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
-      - uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            **Hello MAIN**
-      
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       
       - name: Read file
         id: read_file
@@ -26,6 +22,21 @@ jobs:
           
       - name: Echo file txt
         run: echo "${{ steps.read_file.outputs.contents }}"
+        
+      - name: Post comment
+        uses: actions/github-script@v3.1.0
+        with:
+          github-token: ${{ secrets.TEST_GITHUB_TOKEN }}
+          script: |
+            const commentBody = `File contents:\n\n${{ steps.read_file.outputs.contents }}`;
+            const { data: { id: commentId } } = await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody,
+            });
+            console.log(`Created comment ${commentId}`);
+
         
 #      - name: Post comment
 #        uses: mshick/add-pr-comment@v2
