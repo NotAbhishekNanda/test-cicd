@@ -1,1 +1,9 @@
-Demo File
+No of questions : 3005
+No of intents : 335
+Model training time : 0hr 53min 30sec
+Model pass percentage : 98.23627287853577
+Model error percentage : 1.7637271214642263
+Model F1 score :  0.993
+
+Memory Usage : 3.2Gi
+
