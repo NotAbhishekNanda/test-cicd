@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Read file
-        id: read-file
-        uses: juliangruber/read-file-action@v1
+        id: read_file
+        uses: andstor/file-reader-action@v1
         with:
-          path: ./file.txt
+          path: "file.txt"
           
       - name: Echo file txt
-        run: echo "${{ steps.package.outputs.content }}"
+        run: echo "${{ steps.read_file.outputs.contents }}"
        
 #      - name: Add PR comment
 #        uses: mshick/add-pr-comment@v2
