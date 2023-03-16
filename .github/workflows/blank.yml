@@ -11,23 +11,26 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Read file
         id: read-file
         uses: juliangruber/read-file-action@v1
         with:
           path: ./file.txt
-      
-      - name: Add PR comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            **File Contents:** ${{ steps.read-file.outputs.fileContents }}
-          message-id: add-pr-comment
-          repo-token: ${{ secrets.TEST_GITHUB_TOKEN }}
-          allow-repeats: false
-          status: success
-          issue-number: ${{ github.event.pull_request.number }}
+          
+      - name: Echo file txt
+        run: echo "${{ steps.package.outputs.content }}"
+       
+#      - name: Add PR comment
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message: |
+#            **File Contents:** ${{ steps.read-file.outputs.fileContents }}
+#          message-id: add-pr-comment
+#          repo-token: ${{ secrets.TEST_GITHUB_TOKEN }}
+#          allow-repeats: false
+#          status: success
+#          issue-number: ${{ github.event.pull_request.number }}
 
           
