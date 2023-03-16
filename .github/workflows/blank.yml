@@ -1,9 +1,12 @@
 name: CI
+
 on:
   pull_request:
     types: [labeled]
+
 permissions:
   pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,19 +16,20 @@ jobs:
       
       - name: Read file
         id: read_file
-        uses: andstor/file-reader-action@v1
-        with:
-          path: "file.txt"
-
+        run: |
+          file_contents=$(cat file.txt)
+          echo "file_contents=${file_contents}" >> $GITHUB_ENV
+          
       - name: Echo file txt
-        run: echo "${{ steps.read_file.outputs.contents }}"
-
+        run: echo "${{ env.file_contents }}"
+        
       - name: Post comment
+        id: post_comment
         uses: actions/github-script@v3.1.0
         with:
           github-token: ${{ secrets.TEST_GITHUB_TOKEN }}
           script: |
-            const commentBody = `File contents:\n\n${{ steps.read_file.outputs.contents }}`;
+            const commentBody = `File contents:\n\n${{ env.file_contents }}`;
             const { data: { id: commentId } } = await github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -33,6 +37,9 @@ jobs:
               body: commentBody,
             });
             console.log(`Created comment ${commentId}`);
+        env:
+          comment_id: ${{ steps.post_comment.outputs.comment_id }}
+
 
 
         
