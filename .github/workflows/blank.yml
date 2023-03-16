@@ -1,33 +1,58 @@
 name: CI
-
 on:
   pull_request:
     types: [labeled]
-  
+permissions:
+  pull-requests: write
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Read file
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const fs = require('fs');
-            const fileContents = fs.readFileSync('file.txt', 'utf8');
-            console.log(fileContents);
-            core.setOutput('fileContents', fileContents);
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Read file
+        id: read_file
+        uses: andstor/file-reader-action@v1
         with:
-          message: |
-            **Hello MAIN**
-            File contents: ${{ steps.readfile.outputs.fileContents }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          path: "file.txt"
+
+      - name: Echo file txt
+        run: echo "${{ steps.read_file.outputs.contents }}"
+
+      - name: Post comment
+        uses: actions/github-script@v3.1.0
+        with:
+          github-token: ${{ secrets.TEST_GITHUB_TOKEN }}
+          script: |
+            const commentBody = `File contents:\n\n${{ steps.read_file.outputs.contents }}`;
+            const { data: { id: commentId } } = await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody,
+            });
+            console.log(`Created comment ${commentId}`);
+
+
+
+        
+#      - name: Post comment
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message: |
+#            **Hello MAIN**
+
+       
+#      - name: Add PR comment
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message: |
+#            **File Contents:** ${{ steps.read-file.outputs.fileContents }}
+#          message-id: add-pr-comment
+#          repo-token: ${{ secrets.TEST_GITHUB_TOKEN }}
+#          allow-repeats: false
+#          status: success
+#          issue-number: ${{ github.event.pull_request.number }}
+
           
